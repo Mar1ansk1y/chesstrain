@@ -1,6 +1,6 @@
 package main
 
-import "ChessTrain/internal/model/handlers"
+import "ChessTrain/internal/actions/db/pg/handlers"
 
 func main() {
 	handlers.Handle()

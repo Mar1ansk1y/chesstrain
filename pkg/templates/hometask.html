@@ -3,6 +3,10 @@
 {{define "title" }}Курсы{{end}}
 
 {{define "main" }}
-<h1>домашнее задание</h1>
-<p>Скинь сотку</p>
+<h1>Домашнее задание</h1>
+<form action="/hometask" method="post">
+    <input type="video/mp4" name="MyFile">
+    <input type="submit" name="upload">
+</form>
+
 {{end}}
