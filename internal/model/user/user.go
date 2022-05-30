@@ -13,5 +13,5 @@ type User struct {
 	Password    string `json:"password"`
 	CreditCards []credit_card.CreditCard
 	SuperUser   bool `json:"superUser"`
-	CourseID    uint
+	Course      []course.Course
 }
