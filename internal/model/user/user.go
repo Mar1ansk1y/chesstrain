@@ -2,6 +2,7 @@ package user
 
 import (
 	credit_card "ChessTrain/internal/model/credit-card"
+
 	"gorm.io/gorm"
 )
 
@@ -13,5 +14,5 @@ type User struct {
 	Password    string `json:"password"`
 	CreditCards []credit_card.CreditCard
 	SuperUser   bool `json:"superUser"`
-	CourseID    uint
+	//CourseID    []course.Course
 }

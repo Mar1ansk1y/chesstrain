@@ -6,7 +6,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 type Videomodel struct {
@@ -14,8 +15,8 @@ type Videomodel struct {
 }
 
 func Init() *gorm.DB {
-	connStr := "user=urfu password=123456 dbname=postgres sslmode=disable"
-	db, err := gorm.Open("postgres", connStr)
+	connStr := "host=80.87.192.62 port=32454 user=urfu password=123456 dbname=postgres sslmode=disable"
+	db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)
 	}

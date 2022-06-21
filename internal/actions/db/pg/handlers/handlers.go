@@ -1,18 +1,17 @@
 package handlers
 
 import (
-	"ChessTrain/internal/model/filevideo"
+	"ChessTrain/internal/model/hometask"
 	"errors"
 	"fmt"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
 	"time"
 )
 
-func home(w http.ResponseWriter, r *http.Request) {
+func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return
@@ -33,7 +32,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func showCourse(w http.ResponseWriter, r *http.Request) {
+func (app *application) showCourse(w http.ResponseWriter, r *http.Request) {
 	files := []string{"./pkg/templates/courses.html",
 		"./pkg/templates/base.layot.html"}
 	ts, err := template.ParseFiles(files...)
@@ -49,7 +48,7 @@ func showCourse(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func profiles(w http.ResponseWriter, r *http.Request) {
+func (app *application) profiles(w http.ResponseWriter, r *http.Request) {
 
 	files := []string{"./pkg/templates/NotAuthorized.html",
 		"./pkg/templates/base.layot.html"}
@@ -67,7 +66,7 @@ func profiles(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func bill_page(w http.ResponseWriter, r *http.Request) {
+func (app *application) bill_page(w http.ResponseWriter, r *http.Request) {
 	files := []string{"./pkg/templates/bill_page.html",
 		"./pkg/templates/base.layot.html"}
 	ts, err := template.ParseFiles(files...)
@@ -83,7 +82,7 @@ func bill_page(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (app *application) hometask(w http.ResponseWriter, r *http.Request) {
+func (app *application) createhometask(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method != http.MethodPost {
 		w.Header().Set("Allow", http.MethodPost)
@@ -91,23 +90,11 @@ func (app *application) hometask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	r.ParseMultipartForm(32 << 20)
+	text := "Ваше домашнее задание"
+	header := "Домашнее задание №1"
+	date := time.Now().UTC()
 
-	file, handler, err := r.FormFile("MyFile")
-	if err != nil {
-		log.Println(err.Error())
-		http.Error(w, "Error Retrieving the File", http.StatusNotImplemented)
-	}
-
-	defer file.Close()
-
-	fileBytes, err := ioutil.ReadAll(file)
-	if err != nil {
-		log.Println(err.Error())
-		http.Error(w, "error!", http.StatusBadGateway)
-	}
-
-	id, err := app.videos.Insert(handler.Filename, time.Now().UTC(), fileBytes)
+	id, err := app.client.Insert(text, header, date)
 
 	if err != nil {
 		log.Println(err.Error())
@@ -129,10 +116,10 @@ func (app *application) hometask(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Внутренняя ошибка сервера", 500)
 	}
 
-	http.Redirect(w, r, fmt.Sprintf("/video?id=%d", id), http.StatusSeeOther)
+	http.Redirect(w, r, fmt.Sprintf("/hometask?id=%d", id), http.StatusSeeOther)
 }
 
-func signUp(w http.ResponseWriter, r *http.Request) {
+func (app *application) signUp(w http.ResponseWriter, r *http.Request) {
 	files := []string{"./pkg/templates/signup.html",
 		"./pkg/templates/base.layot.html"}
 	ts, err := template.ParseFiles(files...)
@@ -148,16 +135,16 @@ func signUp(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (app *application) video(w http.ResponseWriter, r *http.Request) {
+func (app *application) hometask(w http.ResponseWriter, r *http.Request) {
 
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil || id < 1 {
 		http.NotFound(w, r)
 	}
 
-	v, err := app.videos.Get(id)
+	v, err := app.client.Get(id)
 	if err != nil {
-		if errors.Is(err, filevideo.ErrNoRecord) {
+		if errors.Is(err, hometask.ErrNoRecord) {
 			http.NotFound(w, r)
 		} else {
 			log.Println(err.Error())
@@ -184,7 +171,7 @@ func (app *application) video(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func signIn(w http.ResponseWriter, r *http.Request) {
+func (app *application) signIn(w http.ResponseWriter, r *http.Request) {
 	files := []string{"./pkg/templates/signin.html",
 		"./pkg/templates/base.layot.html"}
 	ts, err := template.ParseFiles(files...)
