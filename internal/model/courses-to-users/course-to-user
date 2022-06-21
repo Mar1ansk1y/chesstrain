@@ -1,0 +1,13 @@
+package courses-to-users
+
+import (
+	users "ChessTrain/internal/model/users"
+    courses "ChessTrain/internal/model/courses"
+	"gorm.io/gorm"
+)
+
+type CourseToUser struct {
+	gorm.Model
+	courses []courses.Course
+    users   []users.User
+}
