@@ -3,8 +3,10 @@ package course
 import (
 	"ChessTrain/internal/model/module"
 	"ChessTrain/internal/model/user"
-	"gorm.io/gorm"
+
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Course struct {
