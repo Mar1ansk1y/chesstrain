@@ -147,6 +147,7 @@ func (app *application) signIn(w http.ResponseWriter, r *http.Request) {
 		log.Println(err.Error())
 		http.Error(w, "Внутренняя ошибка сервера", 500)
 	}
+
 }
 
 func (app *application) AboutUs(w http.ResponseWriter, r *http.Request) {
@@ -220,4 +221,15 @@ func (app *application) hometask(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Внутренняя ошибка сервера", 500)
 	}
 
+}
+
+func (app *application) Auth(w http.ResponseWriter, r *http.Request) {
+
+	uname := r.FormValue("uname")
+	psw := r.FormValue("psw")
+	if uname == "admin" && psw == "password" {
+		http.Redirect(w, r, "/afterlogin", http.StatusSeeOther)
+	} else {
+		http.Error(w, "Неверный логин или пароль", 500)
+	}
 }

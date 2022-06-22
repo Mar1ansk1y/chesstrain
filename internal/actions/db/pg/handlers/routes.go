@@ -51,6 +51,7 @@ func Handle() {
 	mux.HandleFunc("/hometask", app.hometask)
 	mux.HandleFunc("/aboutus", app.AboutUs)
 	mux.HandleFunc("/afterlogin", app.AfterLogin)
+	mux.HandleFunc("/auth", app.Auth)
 
 	fileServer := http.FileServer(http.Dir("./ui/assets/"))
 
