@@ -17,9 +17,9 @@ type application struct {
 	client   *customer.SnippetModel
 }
 
-func (app *application) clientError(w http.ResponseWriter, status int) {
-	http.Error(w, http.StatusText(status), status)
-}
+//func (app *application) clientError(w http.ResponseWriter, status int) {
+//http.Error(w, http.StatusText(status), status)
+//}
 
 func Handle() {
 
@@ -47,7 +47,14 @@ func Handle() {
 	mux.HandleFunc("/hometask/create", app.createhometask)
 	mux.HandleFunc("/signup", app.signUp)
 	mux.HandleFunc("/signin", app.signIn)
+	mux.HandleFunc("/save_hometask", app.save_hometask)
 	mux.HandleFunc("/hometask", app.hometask)
+	mux.HandleFunc("/aboutus", app.AboutUs)
+	mux.HandleFunc("/afterlogin", app.AfterLogin)
+
+	fileServer := http.FileServer(http.Dir("./ui/assets/"))
+
+	mux.Handle("/assets/", http.StripPrefix("/assets", fileServer))
 
 	srv := &http.Server{
 		Addr:     *addr,

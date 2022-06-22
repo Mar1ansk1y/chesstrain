@@ -1,0 +1,35 @@
+{{template "header" }}
+
+{{define "title" }}Регистрация{{end}}
+
+<body>
+
+    <form action="action_page.php" style="border:1px solid #ccc">
+      <div class="container">
+        <h1>Регистрация</h1>
+        <p>Пожалуйста, заполните форму, чтобы создать аккаунт</p>
+        <hr>
+    
+        <label for="email"><b>Email</b></label>
+        <input type="text" placeholder="Enter Email" name="email" required>
+    
+        <label for="psw"><b>Пароль</b></label>
+        <input type="password" placeholder="Enter Password" name="psw" required>
+    
+        <label for="psw-repeat"><b>Повторите пароль</b></label>
+        <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+    
+        <label>
+          <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Запомнить меня
+        </label>
+    
+       
+    
+        <div class="clearfix">
+          <button type="button" class="cancelbtn">Отмена</button>
+          <button type="submit" class="signupbtn">Регистрация</button>
+        </div>
+      </div>
+    </form>
+        </body>
+    </html>

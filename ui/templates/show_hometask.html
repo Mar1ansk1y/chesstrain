@@ -1,0 +1,16 @@
+{{template "base"}}
+{{define "title"}}Домашнее задание{{end}}
+
+{{define "main"}}
+
+<div class="hometask">
+    <div class="metadata">
+        <strong>{{.Header}}</strong>
+        <span>{{.ID}}</span>
+    </div>
+    <pre><code>{{.Text}}</code></pre>
+    <div class="metadata">
+        <time>Создан: {{.Date}}</time>
+    </div>
+</div>
+{{end}}

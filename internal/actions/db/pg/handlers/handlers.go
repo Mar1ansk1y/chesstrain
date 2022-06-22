@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+
 	"strconv"
 	"time"
 )
@@ -17,8 +18,8 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files := []string{"./pkg/templates/home.html",
-		"./pkg/templates/base.layot.html"}
+	files := []string{"./ui/templates/home.html",
+		"./ui/templates/base_header.html"}
 	ts, err := template.ParseFiles(files...)
 	if err != nil {
 		log.Println(err.Error())
@@ -33,8 +34,8 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) showCourse(w http.ResponseWriter, r *http.Request) {
-	files := []string{"./pkg/templates/courses.html",
-		"./pkg/templates/base.layot.html"}
+	files := []string{"./ui/templates/courses.html",
+		"./ui/templates/base.layot.html"}
 	ts, err := template.ParseFiles(files...)
 	if err != nil {
 		log.Println(err.Error())
@@ -50,8 +51,8 @@ func (app *application) showCourse(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) profiles(w http.ResponseWriter, r *http.Request) {
 
-	files := []string{"./pkg/templates/NotAuthorized.html",
-		"./pkg/templates/base.layot.html"}
+	files := []string{"./ui/templates/Authorized.html",
+		"./ui/templates/base.layot.html"}
 	ts, err := template.ParseFiles(files...)
 	if err != nil {
 		log.Println(err.Error())
@@ -67,8 +68,8 @@ func (app *application) profiles(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) bill_page(w http.ResponseWriter, r *http.Request) {
-	files := []string{"./pkg/templates/bill_page.html",
-		"./pkg/templates/base.layot.html"}
+	files := []string{"./ui/templates/bill_page.html",
+		"./ui/templates/base.layot.html"}
 	ts, err := template.ParseFiles(files...)
 	if err != nil {
 		log.Println(err.Error())
@@ -84,25 +85,8 @@ func (app *application) bill_page(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) createhometask(w http.ResponseWriter, r *http.Request) {
 
-	if r.Method != http.MethodPost {
-		w.Header().Set("Allow", http.MethodPost)
-		app.clientError(w, http.StatusMethodNotAllowed)
-		return
-	}
-
-	text := "Ваше домашнее задание"
-	header := "Домашнее задание №1"
-	date := time.Now().UTC()
-
-	id, err := app.client.Insert(text, header, date)
-
-	if err != nil {
-		log.Println(err.Error())
-		http.Error(w, "Ошибка сервера", 500)
-	}
-
-	files := []string{"./pkg/templates/hometask.html",
-		"./pkg/templates/base.layot.html"}
+	files := []string{"./ui/templates/createhometask.html",
+		"./ui/templates/base.layot.html"}
 
 	ts, err := template.ParseFiles(files...)
 	if err != nil {
@@ -116,13 +100,81 @@ func (app *application) createhometask(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Внутренняя ошибка сервера", 500)
 	}
 
-	http.Redirect(w, r, fmt.Sprintf("/hometask?id=%d", id), http.StatusSeeOther)
 }
 
 func (app *application) signUp(w http.ResponseWriter, r *http.Request) {
-	files := []string{"./pkg/templates/signup.html",
-		"./pkg/templates/base.layot.html"}
+	files := []string{"./ui/templates/signup.html",
+		"./ui/templates/base_header.html"}
 	ts, err := template.ParseFiles(files...)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "Внутренняя ошибка сервера", 500)
+	}
+
+	err = ts.Execute(w, nil)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "Внутренняя ошибка сервера", 500)
+	}
+}
+
+func (app *application) save_hometask(w http.ResponseWriter, r *http.Request) {
+
+	header := r.FormValue("header")
+	text_hometask := r.FormValue("text_hometask")
+	date := time.Now().UTC()
+
+	id, err := app.client.Insert(text_hometask, header, date)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "Ошибка сервера", 500)
+	}
+
+	http.Redirect(w, r, fmt.Sprintf("/hometask?id=%d", id), http.StatusSeeOther)
+}
+
+func (app *application) signIn(w http.ResponseWriter, r *http.Request) {
+	files := []string{"./ui/templates/signin.html",
+		"./ui/templates/base_header.html"}
+	ts, err := template.ParseFiles(files...)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "Внутренняя ошибка сервера", 500)
+	}
+
+	err = ts.Execute(w, nil)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "Внутренняя ошибка сервера", 500)
+	}
+}
+
+func (app *application) AboutUs(w http.ResponseWriter, r *http.Request) {
+
+	files := []string{"./ui/templates/AboutUs.html",
+		"./ui/templates/base_header.html"}
+
+	ts, err := template.ParseFiles(files...)
+
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "Внутренняя ошибка сервера", 500)
+	}
+
+	err = ts.Execute(w, nil)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "Внутренняя ошибка сервера", 500)
+	}
+}
+
+func (app *application) AfterLogin(w http.ResponseWriter, r *http.Request) {
+
+	files := []string{"./ui/templates/AfterLogin.html",
+		"./ui/templates/base_header.html"}
+
+	ts, err := template.ParseFiles(files...)
+
 	if err != nil {
 		log.Println(err.Error())
 		http.Error(w, "Внутренняя ошибка сервера", 500)
@@ -136,7 +188,6 @@ func (app *application) signUp(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) hometask(w http.ResponseWriter, r *http.Request) {
-
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil || id < 1 {
 		http.NotFound(w, r)
@@ -153,36 +204,20 @@ func (app *application) hometask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files := []string{
-		"./pkg/templates/video.html",
-		"./pkg/templates/base.layot.html"}
+	files := []string{"./ui/templates/show_hometask.html",
+		"./ui/templates/base.layout.html"}
 
 	ts, err := template.ParseFiles(files...)
 
 	if err != nil {
-		http.Error(w, "error", 500)
-		return
+		log.Println(err.Error())
+		http.Error(w, "Внутренняя ошибка сервера", 500)
 	}
 
 	err = ts.Execute(w, v)
 	if err != nil {
-		http.Error(w, "error", 500)
-	}
-
-}
-
-func (app *application) signIn(w http.ResponseWriter, r *http.Request) {
-	files := []string{"./pkg/templates/signin.html",
-		"./pkg/templates/base.layot.html"}
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
 		log.Println(err.Error())
 		http.Error(w, "Внутренняя ошибка сервера", 500)
 	}
 
-	err = ts.Execute(w, nil)
-	if err != nil {
-		log.Println(err.Error())
-		http.Error(w, "Внутренняя ошибка сервера", 500)
-	}
 }

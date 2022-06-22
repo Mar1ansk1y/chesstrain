@@ -1,0 +1,13 @@
+{{template "base" }}
+
+{{define "title" }}Создать Домашнее задание{{end}}
+
+{{define "main" }}
+<h1>Домашнее задание</h1>
+<form action="/save_hometask" method="post">
+    <input type="text" name="header" placeholder="Введите название домашнего задания" class = "form-control"><br>
+    <textarea name="text_hometask" id="hometask" class="form-control" placeholder="Введите домашнее задание"></textarea><br>
+    <button class="btn btn-warning">Добавить</button>
+</form>
+
+{{end}}
