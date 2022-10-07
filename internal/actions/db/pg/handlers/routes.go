@@ -24,7 +24,7 @@ type application struct {
 func Handle() {
 
 	addr := flag.String("addr", ":4000", "Сетевой адрес веб-сервера")
-	dsn := flag.String("dsn", "host=80.87.192.62 port=32454 user=urfu password=123456 dbname=postgres sslmode=disable", "Название PSQL источника данных")
+	dsn := flag.String("dsn", "host=localhost port=5432 user=postgres password=asdfghjk2002 dbname=postgres sslmode=disable", "Название PSQL источника данных")
 
 	db, err := openDB(*dsn)
 	if err != nil {
